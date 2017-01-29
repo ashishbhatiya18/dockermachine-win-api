@@ -2,7 +2,7 @@ import subprocess
 import os
 from io import StringIO
 
-class DockerMachine:
+class machine:
     name = ''
     env = []
 

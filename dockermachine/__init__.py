@@ -1,1 +1,1 @@
-from .DockerMachine import DockerMachine
+from .DockerMachine import machine
