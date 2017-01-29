@@ -6,7 +6,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name = "DockerMachine Windows API",
+    name = "dockermachine",
     version = "0.0.1",
     author = "Ashish Bhatiya",
     author_email = "ashishbhatiya18@gmail.com",
