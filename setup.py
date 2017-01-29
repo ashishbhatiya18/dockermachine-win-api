@@ -13,7 +13,7 @@ setup(
     description = ("A simple DockerMachine API for Windows Platform for creating and stopping containers"),
     license = "BSD",
     keywords = "docker docker-machine API",
-    packages=['DockerMachineWin'],
+    packages=['api'],
     long_description=read('README.md'),
     classifiers=[
         "Development Status :: 3 - Alpha",
