@@ -1,6 +1,8 @@
 import subprocess
 import os
 from io import StringIO
+from PortMapping import PortMapping
+from Environment import Environment
 
 class machine:
     name = ''
@@ -25,11 +27,18 @@ class machine:
     def __get_win_env__(self):
         return ['@echo off']
 
-    def launch(self, command):
-        command = StringIO('\n'.join(self.env+[command]+['exit']))
+    def launch(self, image_name, environment, ports, daemon=True):
+        portsFlag,envFlag = '',''
+        for portmap in ports.mappings:
+            portsFlag+=' -p {}:{} '.format(str(portmap[0]),str(portmap[1]))
+        for key in environment.mappings.keys():
+            envFlag+=' --env {}={} '.format(key,environment.mappings[key])
+        docker_run_cmd = 'docker run -d' if daemon else 'docker run'
+        docker_run_cmd+=envFlag+portsFlag+image_name
+        command = StringIO('\n'.join(self.env+[docker_run_cmd]+['exit']))
         stdout, stderr = subprocess.Popen('cmd.exe',stdin=subprocess.PIPE,stdout=subprocess.PIPE).\
         communicate(command.getvalue().encode())
-        return stdout.decode('utf-8').split('\n')[-3][:12]
+        return stdout.decode('utf-8').split()[-2][:12]
 
     def stop(self, container_id):
         command = 'docker rm -f '+container_id
@@ -55,10 +64,12 @@ class machine:
 
 if __name__=="__main__":
     m = machine()
-    # for i in range(5):
-    #     cid = m.launch('docker run -d --env ADVERTISED_HOST=192.168.99.100 --env ADVERTISED_PORT=9092 spotify/kafka')
-    # print(m.containers(all=True).keys())
+    ports = PortMapping()
+    ports.add(2181,2181)
+    ports.add(9092,9092)
+    env = Environment()
+    env.add('ADVERTISED_HOST','192.168.99.100')
+    env.add('ADVERTISED_PORT','9092')
+    print(m.launch('spotify/kafka',env,ports))
     # for container in m.containers(all=True).keys():
     #     m.stop(container)
-    # print(m.containers(all=True))
-    print(m.images().keys())
