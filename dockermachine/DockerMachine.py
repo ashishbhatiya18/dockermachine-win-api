@@ -1,7 +1,6 @@
 import subprocess
 import os
 from io import StringIO
-from Container import Container
 
 class Machine:
     name = ''
