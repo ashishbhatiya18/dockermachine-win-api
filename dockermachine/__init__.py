@@ -1,1 +1,2 @@
-from .DockerMachine import machine
+from .DockerMachine import Machine as machine
+from .Container import Container as container
